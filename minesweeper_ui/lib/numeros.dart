@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:minesweeper_ui/config.dart';
 import 'estilo.dart';
 
 class PantallaNumeros extends StatelessWidget {
@@ -9,88 +10,109 @@ class PantallaNumeros extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("Números", 
-              style: TextStyle(color: ColorsPalette.normalText, fontSize: 80),),
-            SizedBox(height: 20),
-
-
-            //FILA 1
-            Row(mainAxisAlignment: MainAxisAlignment.center,
+      body: Container(width: double.infinity, height: double.infinity,
+          decoration: const BoxDecoration(image: DecorationImage(
+            image: AssetImage('assets/images/fondo.png'), fit: BoxFit.cover)),
+        child: Center(
+          child: Stack(
+            children: [Column(
               children: [
-                SizedBox(width: 400,
-                  child: Column(children: [
-                    Text("Clásico",
-                        style: TextStyle(color: ColorsPalette.normalText, fontSize: 50),),
-                      SizedBox(height: 200, width: 200, 
-                        child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                          itemCount: 4, itemBuilder: (context, index) { 
-                      return Container(color: Colors.cyan, margin: EdgeInsets.all(2),
-                      child: Center(
-                        child: Text(nmros[index], 
-                        style: TextStyle(color: ColorsPalette.normalText, fontSize: 50),
-                        ),
-                      ),);}
-                      ),)
-                  ],)),
-                
-                SizedBox(width: 400,
-                  child: Column(children: [
-                    Text("Colorido",
-                        style: TextStyle(color: ColorsPalette.normalText, fontSize: 50),),
-                      SizedBox(height: 200, width: 200, 
-                        child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                          itemCount: 4, itemBuilder: (context, index) {
-                      return Container(color: Colors.cyan, margin: EdgeInsets.all(2),
-                      child: Center(
-                        child: Text(nmros[index], 
-                          style: TextStyle(color: ColorsPalette.normalText, fontSize: 50),
-                          ),
-                      ),); } ),)
-                  ],))
-              ],
+                SizedBox(height: 33),
+                    TextButton(onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => PantallaConfig()));
+                    },
+                    child: Text("<- Regresar",
+                    style: TextStyle(color: ColorsPalette.normalText, fontSize: 30))),
+                  ],
             ),
-
-
-            //FILA 2
-            Row(mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(width: 400,
-                  child: Column(children: [
-                    Text("Minimalista",
-                        style: TextStyle(color: ColorsPalette.normalText, fontSize: 50),),
-                      SizedBox(height: 200, width: 200, 
-                        child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                          itemCount: 4, itemBuilder: (context, index) { 
-                      return Container(color: Colors.cyan, margin: EdgeInsets.all(2),
-                      child: Center(
-                        child: Text(nmros[index], 
-                          style: TextStyle(color: ColorsPalette.normalText, fontSize: 50),
-                          ),
-                      ),); }),)
-                  ],)),
-                
-                SizedBox(width: 400,
-                  child: Column(children: [
-                    Text("Retro",
-                        style: TextStyle(color: ColorsPalette.normalText, fontSize: 50),),
-                      SizedBox(height: 200, width: 200, 
-                        child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                          itemCount: 4, itemBuilder: (context, index) {
-                      return Container(color: Colors.cyan, margin: EdgeInsets.all(2),
-                      child: Center(
-                        child: Text(nmros[index], 
-                          style: TextStyle(color: ColorsPalette.normalText, fontSize: 50),
-                          ),
-                      ),); }),)
-                  ],))
-              ],
-            )
-          ],
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Números", 
+                    style: TextStyle(color: ColorsPalette.normalText, fontSize: 80),),
+                  SizedBox(height: 20),
+                      
+                      
+                  //FILA 1
+                  Row(mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(width: 400,
+                        child: Column(children: [
+                          Text("Clásico",
+                              style: TextStyle(color: ColorsPalette.normalText, fontSize: 50),),
+                            SizedBox(height: 200, width: 200, 
+                              child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                                itemCount: 4, itemBuilder: (context, index) { 
+                            return Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
+                            image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)),
+                            child: Center(
+                              child: Text(nmros[index], 
+                                style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 50),
+                                ),
+                            ),);}
+                            ),)
+                        ],)),
+                      
+                      SizedBox(width: 400,
+                        child: Column(children: [
+                          Text("Colorido",
+                              style: TextStyle(color: ColorsPalette.normalText, fontSize: 50),),
+                            SizedBox(height: 200, width: 200, 
+                              child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                                itemCount: 4, itemBuilder: (context, index) {
+                            return Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
+                            image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)),
+                            child: Center(
+                              child: Text(nmros[index], 
+                                style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 50),
+                                ),
+                            ),); } ),)
+                        ],))
+                    ],
+                  ),
+                      
+                      
+                  //FILA 2
+                  Row(mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(width: 400,
+                        child: Column(children: [
+                          Text("Minimalista",
+                              style: TextStyle(color: ColorsPalette.normalText, fontSize: 50),),
+                            SizedBox(height: 200, width: 200, 
+                              child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                                itemCount: 4, itemBuilder: (context, index) { 
+                            return Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
+                            image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)),
+                            child: Center(
+                              child: Text(nmros[index], 
+                                style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 50),
+                                ),
+                            ),); }),)
+                        ],)),
+                      
+                      SizedBox(width: 400,
+                        child: Column(children: [
+                          Text("Retro",
+                              style: TextStyle(color: ColorsPalette.normalText, fontSize: 50),),
+                            SizedBox(height: 200, width: 200, 
+                              child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                                itemCount: 4, itemBuilder: (context, index) {
+                            return Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
+                            image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)),
+                            child: Center(
+                              child: Text(nmros[index], 
+                                style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 50),
+                                ),
+                            ),); }),)
+                        ],))
+                    ],
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
