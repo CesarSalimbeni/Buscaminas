@@ -58,7 +58,7 @@ class PantallaConfig extends StatelessWidget {
                   Column(
                     children: [
                       TextButton(onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => PantallaMenu()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => PantallaNumeros()));
                     },
                     style: ButtonStyle(foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                     if (states.contains(WidgetState.hovered)) {
@@ -66,7 +66,7 @@ class PantallaConfig extends StatelessWidget {
                     }
                     return ColorsPalette.normalText;
                 })),
-                child: Text("NÚMEROS", style: TextStyle(fontSize: 30))),
+                child: Text("NÚMEROS", style: TextStyle(fontSize: 60))),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [

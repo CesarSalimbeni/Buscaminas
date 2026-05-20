@@ -20,8 +20,13 @@ class PantallaPerdida extends StatelessWidget {
                 style: TextStyle(color: ColorsPalette.normalText, fontSize: 100),
               ),
               TextButton(onPressed: () {},
-               child: Text("Volver a jugar",
-                  style: TextStyle(color: ColorsPalette.normalText, fontSize: 70)))
+                style: ButtonStyle(foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                if (states.contains(WidgetState.hovered)) {
+                  return ColorsPalette.hoverText;
+                }
+                  return ColorsPalette.normalText;
+                })),
+                child: Text("Volver a jugar", style: TextStyle(fontSize: 70)))
             ],
           ),
         ),
