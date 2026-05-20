@@ -37,7 +37,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Aquí le decimos que busque el index.html dentro de tu carpeta
-          path: './minesweeper_ui'
+          path: './minesweeper_ui/build/web'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
