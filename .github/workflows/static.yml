@@ -1,43 +1,47 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: Deploy Flutter Web to GitHub Pages
 
 on:
-  # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
+    branches:
+      - main # O el nombre de tu rama principal (ej. master)
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# Permisos necesarios para escribir en GitHub Pages
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  contents: write
 
 jobs:
-  # Single deploy job since we're just deploying
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      # 1. Descargar el código del repositorio
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Configurar el entorno de Java (Requerido por Flutter)
+      - name: Setup Java
+        uses: actions/setup-java@v3
         with:
-          # Aquí le decimos que busque el index.html dentro de tu carpeta
-          path: './minesweeper_ui/build/web'
+          distribution: 'zulu'
+          java-version: '17'
+
+      # 3. Configurar Flutter en la máquina virtual
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      # 4. Obtener las dependencias del proyecto (shared_preferences, lottie, etc.)
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 5. Compilar la versión Web asegurando el soporte PWA y la URL base correcta
+      - name: Build Web
+        run: flutter build web --base-href "/${{ github.event.repository.name }}/" --pwa-strategy=offline-first
+
+      # 6. Desplegar los archivos generados a la rama gh-pages
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: minesweeper_ui/build/web # Carpeta donde Flutter guarda la compilación web
+          branch: gh-pages  # Rama automática que creará GitHub para la página
