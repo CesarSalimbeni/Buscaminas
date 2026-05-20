@@ -71,7 +71,7 @@ class _PantallaPartidaEzState extends State<PantallaPartidaEz>{
         } else{
           return Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
               image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)), 
-              child: Text('${celda.adyacentes}', style: EstilosBuscaminas.numero(celda.adyacentes),)
+              child: Center(child: Text('${celda.adyacentes}', style: EstilosBuscaminas.numero(celda.adyacentes, '')))
           );
         }
       } else {

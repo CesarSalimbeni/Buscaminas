@@ -64,6 +64,18 @@ flutter:
     - assets/images/bandera.png
     - assets/images/velitas.png
     - assets/images/bloque.jpg
+  fonts:
+    - family: PixelifySans
+      fonts:
+        - asset: assets/fonts/PixelifySans-VariableFont_wght.ttf
+    - family: Silkscreen
+      fonts:
+        - asset: assets/fonts/slkscr.ttf
+        - asset: assets/fonts/slkscrb.ttf
+          weight: 700
+    - family: Butler
+      fonts:
+        - asset: assets/fonts/Butler-Free-Rmn.ttf
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
