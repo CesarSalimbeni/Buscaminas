@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:minesweeper_ui/buscaminas.dart';
 
 class PantallaPartidaEz extends StatefulWidget {
   const PantallaPartidaEz({super.key});
@@ -8,7 +9,22 @@ class PantallaPartidaEz extends StatefulWidget {
 }
 
 class _PantallaPartidaEzState extends State<PantallaPartidaEz>{
-  List<bool> celdasConBandera = List.generate(36, (index) => false);
+  late Buscaminas _juego;
+  final int _filas = 6;
+  final int _columnas = 6;
+  final int _minas = 10;
+
+  @override
+  void initState(){
+    super.initState();
+    _juego = Buscaminas(filas: _filas, columnas: _columnas, minas: _minas);
+  }
+
+  void _reiniciarPartida(){
+    setState(() {
+      _juego.reiniciar();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,26 +33,53 @@ class _PantallaPartidaEzState extends State<PantallaPartidaEz>{
         child: FittedBox(
           fit: BoxFit.contain,
           child: SizedBox(width: 800, height: 800,
-          child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 6),
-          itemCount: 36, itemBuilder: (context, index) {
-            return GestureDetector(onLongPress: () {
+          child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: _columnas),
+          itemCount: _filas*_columnas, itemBuilder: (context, index) {
+            int fila = index ~/ _columnas;
+            int columna = index % _columnas;
+            CeldaBuscaminas celda = _juego.obtenerCelda(fila, columna);
+
+            return GestureDetector(onTap: (){
               setState(() {
-                celdasConBandera[index] = !celdasConBandera[index];
-              });
-            }, 
-            child: Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
-              image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)),
-              child: celdasConBandera[index]
-              ? Padding(padding: EdgeInsets.all(0), child: Image.asset('assets/images/bandera.png'),
-              )
-              :
-              null
-              )
-              );
-          }),
+                _juego.descubrirCelda(fila, columna);
+                if(_juego.juegoTerminado){
+                  //cambio a pantalla de victoria o perdida
+                }
+              },); },
+              onLongPress: () {
+                setState((){
+                  _juego.alternarBandera(fila, columna);
+                });
+              },
+              child: _vistaCelda(celda)
+            );
+          }
         )
         ),
         ),
-      );
+      ));
+    }
+
+    Widget _vistaCelda(CeldaBuscaminas celda){
+      if (celda.estaDescubierta){
+        if (celda.mina){
+          return Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
+              image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)), 
+              child: Padding(padding: EdgeInsets.all(0), child: Image.asset('assets/images/mina.png'))
+          );
+        } else{
+          return Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
+              image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)), child:
+          );
+        }
+      } else {
+        return Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
+              image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)),
+              child: celda.estaMarcada
+              ? Padding(padding: EdgeInsets.all(0), child: Image.asset('assets/images/bandera.png'))
+              :
+              null
+          );
+      }
     }
 }
