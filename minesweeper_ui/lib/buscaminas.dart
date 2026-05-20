@@ -50,14 +50,26 @@ class Buscaminas {
     );
   }
 
-  /// Coloca las minas en el tablero, asegurando que la celda segura (safeFila, safeColumna) no contenga una mina.
+  /// Coloca las minas en el tablero, asegurando que la celda segura (safeFila, safeColumna)
+  /// y sus celdas vecinas no contengan minas.
   void _colocarMinas(int safeFila, int safeColumna) {
     final rng = Random();
     final totalCeldas = filas * columnas;
-    final safePos = safeFila * columnas + safeColumna;
-    final posiciones = List<int>.generate(totalCeldas, (index) => index)
-      ..remove(safePos)
-      ..shuffle(rng);
+    final posiciones = List<int>.generate(totalCeldas, (index) => index);
+
+    final safePosiciones = <int>{};
+    for (var dFila = -1; dFila <= 1; dFila++) {
+      for (var dColumna = -1; dColumna <= 1; dColumna++) {
+        final nFila = safeFila + dFila;
+        final nColumna = safeColumna + dColumna;
+        if (_estaDentro(nFila, nColumna)) {
+          safePosiciones.add(nFila * columnas + nColumna);
+        }
+      }
+    }
+
+    posiciones.removeWhere(safePosiciones.contains);
+    posiciones.shuffle(rng);
 
     for (var i = 0; i < minas && i < posiciones.length; i++) {
       final fila = posiciones[i] ~/ columnas;
