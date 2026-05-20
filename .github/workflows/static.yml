@@ -2,46 +2,59 @@ name: Deploy Flutter Web to GitHub Pages
 
 on:
   push:
-    branches:
-      - main # O el nombre de tu rama principal (ej. master)
+    branches: ["main"]
+  workflow_dispatch:
 
-# Permisos necesarios para escribir en GitHub Pages
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-
     steps:
-      # 1. Descargar el código del repositorio
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # 2. Configurar el entorno de Java (Requerido por Flutter)
+      # 1. Configurar Java (necesario para las herramientas de Flutter)
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      # 3. Configurar Flutter en la máquina virtual
+      # 2. Instalar y configurar Flutter
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
 
-      # 4. Obtener las dependencias del proyecto (shared_preferences, lottie, etc.)
-      - name: Install dependencies
-        run: flutter pub get
+      # 3. Descargar dependencias y compilar el proyecto Flutter Web
+      - name: Build Flutter Web
+        run: |
+          cd minesweeper_ui
+          flutter pub get
+          flutter build web --base-href "/Buscaminas/"
 
-      # 5. Compilar la versión Web asegurando el soporte PWA y la URL base correcta
-      - name: Build Web
-        run: flutter build web --base-href "/${{ github.event.repository.name }}/" --pwa-strategy=offline-first
+      # 4. Configurar la estructura de GitHub Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-      # 6. Desplegar los archivos generados a la rama gh-pages
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      # 5. Subir la carpeta compilada (build/web) como artefacto
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          folder: minesweeper_ui/build/web # Carpeta donde Flutter guarda la compilación web
-          branch: gh-pages  # Rama automática que creará GitHub para la página
+          path: './minesweeper_ui/build/web'
+
+      # 6. Desplegar en GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
