@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:minesweeper_ui/config.dart';
+import 'package:minesweeper_ui/menu.dart';
 import 'estilo.dart';
 
 class PantallaNumeros extends StatelessWidget {
@@ -17,14 +18,20 @@ class PantallaNumeros extends StatelessWidget {
           child: Stack(
             children: [Column(
               children: [
-                SizedBox(height: 33),
+                SizedBox(height: 24),
                     TextButton(onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => PantallaConfig()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => PantallaMenu()));
                     },
-                    child: Text("<- Regresar",
-                    style: TextStyle(color: ColorsPalette.normalText, fontSize: 30))),
+                    style: ButtonStyle(foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(WidgetState.hovered)) {
+                    return ColorsPalette.hoverText;
+                    }
+                    return ColorsPalette.normalText;
+                })),
+                child: Text("<- Regresar", style: TextStyle(fontSize: 30))),
                   ],
             ),
+            SizedBox(height: 40,),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

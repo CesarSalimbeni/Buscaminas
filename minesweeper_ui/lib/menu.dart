@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:minesweeper_ui/config.dart';
+import 'package:minesweeper_ui/partidaez.dart';
 import 'package:minesweeper_ui/tut.dart';
 import 'estilo.dart';
 
@@ -18,28 +19,50 @@ class PantallaMenu extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               //JUGAR
-              TextButton(onPressed: () {},
-               child: Text("Jugar",
-                  style: TextStyle(color: ColorsPalette.normalText, fontSize: 96))),
+              TextButton(onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => PantallaPartidaEz()));
+              },
+                style: ButtonStyle(foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                  if (states.contains(WidgetState.hovered)) {
+                    return ColorsPalette.hoverText;
+                  }
+                  return ColorsPalette.normalText;
+                })),
+                child: Text("Jugar", style: TextStyle(fontSize: 96))),
               
               //HIGHSCORE
               TextButton(onPressed: () {},
-               child: Text("High Scores",
-                  style: TextStyle(color: ColorsPalette.normalText, fontSize: 96))),
+                style: ButtonStyle(foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                  if (states.contains(WidgetState.hovered)) {
+                    return ColorsPalette.hoverText;
+                  }
+                  return ColorsPalette.normalText;
+                })),
+                child: Text("High Scores", style: TextStyle(fontSize: 96))),
               
               //CONFIGURACIONES
               TextButton(onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => PantallaConfig()));
               },
-               child: Text("Configuraciones",
-                  style: TextStyle(color: ColorsPalette.normalText, fontSize: 96))),
+                style: ButtonStyle(foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                  if (states.contains(WidgetState.hovered)) {
+                    return ColorsPalette.hoverText;
+                  }
+                  return ColorsPalette.normalText;
+                })),
+                child: Text("Configuraciones", style: TextStyle(fontSize: 96))),
               
               //TUTORIAL
               TextButton(onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => PantallaTut()));
               },
-               child: Text("Tutorial",
-                  style: TextStyle(color: ColorsPalette.normalText, fontSize: 96))),
+                style: ButtonStyle(foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                  if (states.contains(WidgetState.hovered)) {
+                    return ColorsPalette.hoverText;
+                  }
+                  return ColorsPalette.normalText;
+                })),
+                child: Text("Tutorial", style: TextStyle(fontSize: 96))),
             ],
           ),
         ),

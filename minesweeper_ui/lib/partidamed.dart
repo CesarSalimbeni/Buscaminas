@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
-class PantallaPartidaMed extends StatelessWidget {
+class PantallaPartidaMed extends StatefulWidget {
   const PantallaPartidaMed({super.key});
+
+  @override
+  State<PantallaPartidaMed> createState() => _PantallaPartidaMedState();
+}
+
+class _PantallaPartidaMedState extends State<PantallaPartidaMed>{
+  List<bool> celdasConBandera = List.generate(64, (index) => false);
 
   @override
   Widget build(BuildContext context) {
@@ -12,12 +19,24 @@ class PantallaPartidaMed extends StatelessWidget {
           child: SizedBox(width: 800, height: 800,
           child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 8),
           itemCount: 64, itemBuilder: (context, index) {
-            return Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
-              image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)));
+            return GestureDetector(onLongPress: () {
+              setState(() {
+                celdasConBandera[index] = !celdasConBandera[index];
+              });
+            }, 
+            child: Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
+              image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)),
+              child: celdasConBandera[index]
+              ? Padding(padding: EdgeInsets.all(0), child: Image.asset('assets/images/bandera.png'),
+              )
+              :
+              null
+              )
+              );
           }),
         )
         ),
-      )
-    );
-  }
+        ),
+      );
+    }
 }
