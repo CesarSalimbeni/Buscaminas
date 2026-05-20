@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:minesweeper_ui/buscaminas.dart';
+import 'package:minesweeper_ui/estilo.dart';
 
 class PantallaPartidaDif extends StatefulWidget {
   const PantallaPartidaDif({super.key});
@@ -70,7 +71,7 @@ class _PantallaPartidaDifState extends State<PantallaPartidaDif>{
         } else{
           return Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
               image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)), 
-              child: Padding(padding: EdgeInsets.all(0), child: Image.asset('assets/images/mina.png'))
+              child: Text('${celda.adyacentes}', style: EstilosBuscaminas.numero(celda.adyacentes),)
           );
         }
       } else {

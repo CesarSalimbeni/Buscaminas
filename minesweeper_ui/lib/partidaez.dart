@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:minesweeper_ui/buscaminas.dart';
+import 'package:minesweeper_ui/estilo.dart';
 
 class PantallaPartidaEz extends StatefulWidget {
   const PantallaPartidaEz({super.key});
@@ -69,7 +70,8 @@ class _PantallaPartidaEzState extends State<PantallaPartidaEz>{
           );
         } else{
           return Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
-              image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)), child:
+              image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)), 
+              child: Text('${celda.adyacentes}', style: EstilosBuscaminas.numero(celda.adyacentes),)
           );
         }
       } else {
