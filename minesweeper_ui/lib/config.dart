@@ -1,10 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:minesweeper_ui/menu.dart';
 import 'package:minesweeper_ui/numeros.dart';
 import 'estilo.dart';
 
-class PantallaConfig extends StatelessWidget {
-  const PantallaConfig({super.key});
+enum Dificultad { facil, medio, dificil }
+enum Nmros { clasico, colorido, retro, minimalista }
+enum Tema { claro, oscuro, automatico }
+
+class PantallaConfig extends StatefulWidget {
+  final Dificultad initialDifficulty;
+  const PantallaConfig({super.key, required this.initialDifficulty});
+
+  @override
+  State<PantallaConfig> createState() => _PantallaConfigState();
+}
+
+class _PantallaConfigState extends State<PantallaConfig> {
+  late Dificultad _selectedDificultad;
+  Nmros _selectedNmros = Nmros.clasico;
+  Tema _selectedTema = Tema.claro;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDificultad = widget.initialDifficulty;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +37,7 @@ class PantallaConfig extends StatelessWidget {
                   children: [
                     SizedBox(height: 24),
                     TextButton(onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => PantallaMenu()));
+                      Navigator.pop(context, _selectedDificultad);
                     },
                     style: ButtonStyle(foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                     if (states.contains(WidgetState.hovered)) {
@@ -39,18 +58,31 @@ class PantallaConfig extends StatelessWidget {
                     children: [
                       Text("DIFICULTAD",
                         style: TextStyle(color: ColorsPalette.normalText, fontSize: 60)),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text("Fácil: 6x6",
-                            style: TextStyle(color: ColorsPalette.normalText, fontSize: 40)),
-                          Text("Medio: 8x8",
-                            style: TextStyle(color: ColorsPalette.normalText, fontSize: 40)),
-                          Text("Difícil: 10x10",
-                            style: TextStyle(color: ColorsPalette.normalText, fontSize: 40))
-                        ],
-                      ),
-                    ]
+                      SegmentedButton<Dificultad>(segments: [
+                        ButtonSegment(value: Dificultad.facil, label: Text("Fácil: 6x6", style: TextStyle(fontSize: 24))),
+                        ButtonSegment(value: Dificultad.medio, label: Text("Medio: 8x8", style: TextStyle(fontSize: 24))),
+                        ButtonSegment(value: Dificultad.dificil, label: Text("Difícil: 10x10", style: TextStyle(fontSize: 24))),
+                        ], selected: {_selectedDificultad},
+                        onSelectionChanged: (selection) {
+                        setState(() => _selectedDificultad = selection.first);
+                        }, style: ButtonStyle(
+                        foregroundColor: WidgetStateProperty.all<Color>(ColorsPalette.normalText),
+                        side: WidgetStateProperty.all<BorderSide>(
+                        BorderSide(
+                        color: Color(0xFF565042), 
+                        width: 1.0, 
+                        ),
+                       ),
+                        backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+                        if (states.contains(WidgetState.selected)) {
+                          return  Color(0xFF565042); 
+                        }
+                        return Colors.transparent; 
+                        }), visualDensity: VisualDensity.comfortable,
+                        padding: WidgetStateProperty.all<EdgeInsets>(
+                        const EdgeInsets.symmetric(vertical: 20, horizontal: 24),),
+                      )
+                  )]
                   ),
                   const SizedBox(height: 30,),
                       
@@ -67,20 +99,32 @@ class PantallaConfig extends StatelessWidget {
                     return ColorsPalette.normalText;
                 })),
                 child: Text("NÚMEROS", style: TextStyle(fontSize: 60))),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text("Clásico",
-                            style: TextStyle(color: ColorsPalette.normalText, fontSize: 40)),
-                          Text("Colorido",
-                            style: TextStyle(color: ColorsPalette.normalText, fontSize: 40)),
-                          Text("Minimalista",
-                            style: TextStyle(color: ColorsPalette.normalText, fontSize: 40)),
-                          Text("Retro",
-                            style: TextStyle(color: ColorsPalette.normalText, fontSize: 40))
-                        ],
-                      ),
-                    ]
+                      SegmentedButton<Nmros>(segments: [
+                        ButtonSegment(value: Nmros.clasico, label: Text("Clásico", style: TextStyle(fontSize: 24))),
+                        ButtonSegment(value: Nmros.colorido, label: Text("Colorido", style: TextStyle(fontSize: 24))),
+                        ButtonSegment(value: Nmros.minimalista, label: Text("Minimalista", style: TextStyle(fontSize: 24))),
+                        ButtonSegment(value: Nmros.retro, label: Text("Retro", style: TextStyle(fontSize: 24)))
+                        ], selected: {_selectedNmros},
+                        onSelectionChanged: (selection) {
+                        setState(() => _selectedNmros = selection.first);
+                        }, style: ButtonStyle(
+                        foregroundColor: WidgetStateProperty.all<Color>(ColorsPalette.normalText),
+                        side: WidgetStateProperty.all<BorderSide>(
+                        BorderSide(
+                        color: Color(0xFF565042), 
+                        width: 1.0, 
+                        ),
+                       ),
+                        backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+                        if (states.contains(WidgetState.selected)) {
+                          return  Color(0xFF565042); 
+                        }
+                        return Colors.transparent; 
+                        }), visualDensity: VisualDensity.comfortable,
+                        padding: WidgetStateProperty.all<EdgeInsets>(
+                        const EdgeInsets.symmetric(vertical: 20, horizontal: 24),),
+                      )
+                  )]
                   ),
                   const SizedBox(height: 30,),
                   
@@ -107,18 +151,31 @@ class PantallaConfig extends StatelessWidget {
                     children: [
                       Text("TEMA",
                         style: TextStyle(color: ColorsPalette.normalText, fontSize: 60)),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                        Text("Claro",
-                          style: TextStyle(color: ColorsPalette.normalText, fontSize: 40)),
-                        Text("Oscuro",
-                          style: TextStyle(color: ColorsPalette.normalText, fontSize: 40)),
-                        Text("Automático",
-                          style: TextStyle(color: ColorsPalette.normalText, fontSize: 40))
-                        ],
-                      ),
-                    ]
+                      SegmentedButton<Tema>(segments: [
+                        ButtonSegment(value: Tema.claro, label: Text("Claro", style: TextStyle(fontSize: 24))),
+                        ButtonSegment(value: Tema.oscuro, label: Text("Oscuro", style: TextStyle(fontSize: 24))),
+                        ButtonSegment(value: Tema.automatico, label: Text("Automático", style: TextStyle(fontSize: 24))),
+                        ], selected: {_selectedTema},
+                        onSelectionChanged: (selection) {
+                        setState(() => _selectedTema = selection.first);
+                        }, style: ButtonStyle(
+                        foregroundColor: WidgetStateProperty.all<Color>(ColorsPalette.normalText),
+                        side: WidgetStateProperty.all<BorderSide>(
+                        BorderSide(
+                        color: Color(0xFF565042), 
+                        width: 1.0, 
+                        ),
+                       ),
+                        backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+                        if (states.contains(WidgetState.selected)) {
+                          return  Color(0xFF565042); 
+                        }
+                        return Colors.transparent; 
+                        }), visualDensity: VisualDensity.comfortable,
+                        padding: WidgetStateProperty.all<EdgeInsets>(
+                        const EdgeInsets.symmetric(vertical: 20, horizontal: 24),),
+                      )
+                  )]
                   ),
                 ],
               ),

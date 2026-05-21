@@ -19,7 +19,7 @@ class PantallaNumeros extends StatelessWidget {
               children: [
                 SizedBox(height: 24),
                     TextButton(onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => PantallaConfig()));
+                      Navigator.pop(context);
                     },
                     style: ButtonStyle(foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                     if (states.contains(WidgetState.hovered)) {

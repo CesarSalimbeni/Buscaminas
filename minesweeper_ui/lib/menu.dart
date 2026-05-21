@@ -3,11 +3,20 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:minesweeper_ui/config.dart';
 import 'package:minesweeper_ui/partidaez.dart';
+import 'package:minesweeper_ui/partidamed.dart';
+import 'package:minesweeper_ui/partidadif.dart';
 import 'package:minesweeper_ui/tut.dart';
 import 'estilo.dart';
 
-class PantallaMenu extends StatelessWidget {
+class PantallaMenu extends StatefulWidget {
   const PantallaMenu({super.key});
+
+  @override
+  State<PantallaMenu> createState() => _PantallaMenuState();
+}
+
+class _PantallaMenuState extends State<PantallaMenu> {
+  Dificultad _activeDifficulty = Dificultad.facil;
 
   @override
   Widget build(BuildContext context) {
@@ -33,14 +42,42 @@ class PantallaMenu extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _menuButton(context, 'Jugar', () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => PantallaPartidaEz()));
+                  Widget targetPage;
+                  switch (_activeDifficulty) {
+                    case Dificultad.facil:
+                      targetPage = const PantallaPartidaEz();
+                      break;
+                    case Dificultad.medio:
+                      targetPage = const PantallaPartidaMed(); // Matches your partidamed.dart file
+                      break;
+                    case Dificultad.dificil:
+                      targetPage = const PantallaPartidaDif(); // Matches your partidadif.dart file
+                      break;
+                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => targetPage),
+                  );
                 }, fontSize),
                 _menuButton(context, 'High Scores', () {}, fontSize),
-                _menuButton(context, 'Configuración', () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => PantallaConfig()));
+                
+                // CONFIGURACIÓN BUTTON (STATE INTERCHANGE ACTION)
+                _menuButton(context, 'Configuración', () async {
+                  final result = await Navigator.push<Dificultad>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PantallaConfig(initialDifficulty: _activeDifficulty),
+                    ),
+                  );
+                  if (result != null) {
+                    setState(() {
+                      _activeDifficulty = result;
+                    });
+                  }
                 }, fontSize),
+                
                 _menuButton(context, 'Tutorial', () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => PantallaTut()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const PantallaTut()));
                 }, fontSize),
               ],
             ),
