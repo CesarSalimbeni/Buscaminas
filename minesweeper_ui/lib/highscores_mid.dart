@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:minesweeper_ui/gestionDatos.dart';
 import 'package:minesweeper_ui/highscores_dif.dart';
 import 'package:minesweeper_ui/highscores_ez.dart';
 import 'package:minesweeper_ui/menu.dart';
@@ -92,18 +93,43 @@ class PantallaHsMid extends StatelessWidget {
                             ],
                           ),
                     SizedBox(height: spacing * 1.5),
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      runSpacing: spacing / 2,
-                      spacing: 16,
-                      children: List.generate(
-                        5,
-                        (_) => Text(
-                          'Usuario',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: ColorsPalette.normalText, fontSize: labelFontSize),
-                        ),
-                      ),
+                    FutureBuilder<List<Record>>(
+                      future: GestionDatos.obtenerRecords('medio'),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 24),
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (snapshot.hasError) {
+                          return Text(
+                            'Error al cargar records',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: ColorsPalette.normalText, fontSize: labelFontSize),
+                          );
+                        }
+                        final records = snapshot.data ?? <Record>[];
+                        if (records.isEmpty) {
+                          return Text(
+                            'Aún no hay records',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: ColorsPalette.normalText, fontSize: labelFontSize),
+                          );
+                        }
+                        return Column(
+                          children: records.map((record) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Text(
+                                '${_formatFecha(record.fecha)} — ${_formatTiempo(record.tiempo)}',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: ColorsPalette.normalText, fontSize: labelFontSize),
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -136,5 +162,16 @@ class PantallaHsMid extends StatelessWidget {
       ),
       child: Text(label, style: TextStyle(fontSize: fontSize)),
     );
+  }
+
+  String _formatTiempo(int tiempoMillis) {
+    final segundos = tiempoMillis ~/ 1000;
+    final minutos = segundos ~/ 60;
+    final restantes = segundos % 60;
+    return '${minutos.toString().padLeft(2, "0")}:${restantes.toString().padLeft(2, "0")}';
+  }
+
+  String _formatFecha(DateTime fecha) {
+    return '${fecha.day.toString().padLeft(2, "0")}/${fecha.month.toString().padLeft(2, "0")}/${fecha.year}';
   }
 }

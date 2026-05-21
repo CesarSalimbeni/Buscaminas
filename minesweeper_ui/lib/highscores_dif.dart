@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:minesweeper_ui/gestionDatos.dart';
 import 'package:minesweeper_ui/highscores_ez.dart';
 import 'package:minesweeper_ui/highscores_mid.dart';
 import 'package:minesweeper_ui/menu.dart';
@@ -89,11 +90,11 @@ class PantallaHsDif extends StatelessWidget {
                               _buildModeButton(context, 'FÁCIL', () {
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => const PantallaHsEz()));
                               }, buttonFontSize),
-                              SizedBox(height: 14),
+                              SizedBox(height: 12),
                               _buildModeButton(context, 'MEDIO', () {
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => const PantallaHsMid()));
                               }, buttonFontSize),
-                              SizedBox(height: 14),
+                              SizedBox(height: 12),
                               Text(
                                 'DIFÍCIL',
                                 textAlign: TextAlign.center,
@@ -101,21 +102,44 @@ class PantallaHsDif extends StatelessWidget {
                               ),
                             ],
                           ),
-                    SizedBox(height: spacing * 2),
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      runSpacing: spacing,
-                      children: List.generate(
-                        5,
-                        (_) => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Text(
-                            'Usuario',
+                    SizedBox(height: spacing * 1.5),
+                    FutureBuilder<List<Record>>(
+                      future: GestionDatos.obtenerRecords('dificil'),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 24),
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (snapshot.hasError) {
+                          return Text(
+                            'Error al cargar records',
                             textAlign: TextAlign.center,
                             style: TextStyle(color: ColorsPalette.normalText, fontSize: labelFontSize),
-                          ),
-                        ),
-                      ),
+                          );
+                        }
+                        final records = snapshot.data ?? <Record>[];
+                        if (records.isEmpty) {
+                          return Text(
+                            'Aún no hay records',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: ColorsPalette.normalText, fontSize: labelFontSize),
+                          );
+                        }
+                        return Column(
+                          children: records.map((record) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Text(
+                                '${_formatFecha(record.fecha)} — ${_formatTiempo(record.tiempo)}',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: ColorsPalette.normalText, fontSize: labelFontSize),
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -140,5 +164,16 @@ class PantallaHsDif extends StatelessWidget {
       ),
       child: Text(label, style: TextStyle(fontSize: fontSize)),
     );
+  }
+
+  String _formatTiempo(int tiempoMillis) {
+    final segundos = tiempoMillis ~/ 1000;
+    final minutos = segundos ~/ 60;
+    final restantes = segundos % 60;
+    return '${minutos.toString().padLeft(2, "0")}:${restantes.toString().padLeft(2, "0")}';
+  }
+
+  String _formatFecha(DateTime fecha) {
+    return '${fecha.day.toString().padLeft(2, "0")}/${fecha.month.toString().padLeft(2, "0")}/${fecha.year}';
   }
 }
