@@ -15,9 +15,9 @@ class PantallaPartidaDif extends StatefulWidget {
 
 class _PantallaPartidaDifState extends State<PantallaPartidaDif>{
   late Buscaminas _juego;
-  final int _filas = 6;
-  final int _columnas = 6;
-  final int _minas = 10;
+  final int _filas = 10;
+  final int _columnas = 10;
+  final int _minas = 30;
   Timer? _cronometro;
   int _segundosTranscurridos = 0;
 
