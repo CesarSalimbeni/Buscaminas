@@ -7,7 +7,8 @@ import 'package:minesweeper_ui/estilo.dart';
 import 'package:minesweeper_ui/gestionDatos.dart';
 
 class PantallaPartidaDif extends StatefulWidget {
-  const PantallaPartidaDif({super.key});
+  final String estiloNumeros;
+  const PantallaPartidaDif({super.key, required this.estiloNumeros});
 
   @override
   State<PantallaPartidaDif> createState() => _PantallaPartidaDifState();
@@ -170,7 +171,8 @@ class _PantallaPartidaDifState extends State<PantallaPartidaDif>{
         } else{
           return Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
               image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)), 
-              child: Center(child: Text('${celda.adyacentes}', style: EstilosBuscaminas.numero(celda.adyacentes, '')))
+              child: Center(child: Text('${celda.adyacentes}', 
+              style: EstilosBuscaminas.numero(celda.adyacentes, widget.estiloNumeros)))
           );
         }
       } else {

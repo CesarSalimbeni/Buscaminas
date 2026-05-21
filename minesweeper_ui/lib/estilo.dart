@@ -6,30 +6,38 @@ class ColorsPalette{
 }
 
 class EstilosBuscaminas {
-  static TextStyle numero(int adyacentes, String tiponmro) {
+  static TextStyle numero(int adyacentes, String tiponmroRaw) {
+    String tiponmro = tiponmroRaw.trim();
+
     Color color;
     switch (adyacentes) {
       case 1: color = Colors.blue.shade700; 
+      break;
       case 2: color = Colors.green.shade700;
+      break;
       case 3: color = Colors.red.shade700;
+      break;
       default: color = Colors.orange.shade700;
     }
     String? fuente;
 
-    if (tiponmro == 'retro'){
-      color = ColorsPalette.normalText;
+    if (tiponmro == 'Retro'){
+      color = Colors.black;
       fuente = 'PixelifySans';
-    } else if (tiponmro == 'colorido'){
+    } else if (tiponmro == 'Colorido'){
       switch (adyacentes) {
         case 1: color = Color(0xFFF3EAF4); 
+        break;
         case 2: color = Color(0xFFFFD97D);
+        break;
         case 3: color = Color(0xFFFF7477);
+        break;
         default: color = Color(0xFF69140F);
     }
-    } else if (tiponmro == 'minimalista'){
-      color = ColorsPalette.normalText;
+    } else if (tiponmro == 'Minimalista'){
+      color = Colors.black;
       fuente = 'Butler';
     }
-    return TextStyle(fontSize: 90, fontWeight: FontWeight.bold, color: color, fontFamily: fuente);
+    return TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: color, fontFamily: fuente);
   }
 }

@@ -16,7 +16,7 @@ class PantallaConfig extends StatefulWidget {
 
 class _PantallaConfigState extends State<PantallaConfig> {
   late Dificultad _selectedDificultad;
-  Nmros _selectedNmros = Nmros.clasico;
+  String _selectedNmros = "Clásico";
   Tema _selectedTema = Tema.claro;
 
   @override
@@ -37,7 +37,10 @@ class _PantallaConfigState extends State<PantallaConfig> {
                   children: [
                     SizedBox(height: 24),
                     TextButton(onPressed: () {
-                      Navigator.pop(context, _selectedDificultad);
+                      Navigator.pop(context, {
+                      'dificultad': _selectedDificultad,
+                      'numeros': _selectedNmros,
+                      });
                     },
                     style: ButtonStyle(foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                     if (states.contains(WidgetState.hovered)) {
@@ -99,14 +102,19 @@ class _PantallaConfigState extends State<PantallaConfig> {
                     return ColorsPalette.normalText;
                 })),
                 child: Text("NÚMEROS", style: TextStyle(fontSize: 60))),
-                      SegmentedButton<Nmros>(segments: [
-                        ButtonSegment(value: Nmros.clasico, label: Text("Clásico", style: TextStyle(fontSize: 24))),
-                        ButtonSegment(value: Nmros.colorido, label: Text("Colorido", style: TextStyle(fontSize: 24))),
-                        ButtonSegment(value: Nmros.minimalista, label: Text("Minimalista", style: TextStyle(fontSize: 24))),
-                        ButtonSegment(value: Nmros.retro, label: Text("Retro", style: TextStyle(fontSize: 24)))
-                        ], selected: {_selectedNmros},
+                      SegmentedButton<String>(segments: [
+                          ButtonSegment(value: "Clásico", label: Text("Clásico", style: TextStyle(fontSize: 24))),
+                          ButtonSegment(value: "Colorido", label: Text("Colorido", style: TextStyle(fontSize: 24))),
+                          ButtonSegment(value: "Minimalista", label: Text("Minimalista", style: TextStyle(fontSize: 24))),
+                          ButtonSegment(value: "Retro", label: Text("Retro", style: TextStyle(fontSize: 24)))
+                        ], 
+                        selected: {_selectedNmros},
                         onSelectionChanged: (selection) {
-                        setState(() => _selectedNmros = selection.first);
+                          setState(() {
+                            // 4. selection.first is now guaranteed to be a String!
+                            _selectedNmros = selection.first;
+                            print("DEBUG: Selected Numeros String -> $_selectedNmros");
+                          });
                         }, style: ButtonStyle(
                         foregroundColor: WidgetStateProperty.all<Color>(ColorsPalette.normalText),
                         side: WidgetStateProperty.all<BorderSide>(

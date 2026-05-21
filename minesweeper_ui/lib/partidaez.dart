@@ -7,7 +7,8 @@ import 'package:minesweeper_ui/estilo.dart';
 import 'package:minesweeper_ui/gestionDatos.dart';
 
 class PantallaPartidaEz extends StatefulWidget {
-  const PantallaPartidaEz({super.key});
+  final String estiloNumeros;
+  const PantallaPartidaEz({super.key, required this.estiloNumeros});
 
   @override
   State<PantallaPartidaEz> createState() => _PantallaPartidaEzState();
@@ -170,7 +171,8 @@ class _PantallaPartidaEzState extends State<PantallaPartidaEz>{
         } else{
           return Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
               image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)), 
-              child: Center(child: Text('${celda.adyacentes}', style: EstilosBuscaminas.numero(celda.adyacentes, '')))
+              child: Center(child: Text('${celda.adyacentes}', 
+              style: EstilosBuscaminas.numero(celda.adyacentes, widget.estiloNumeros)))
           );
         }
       } else {

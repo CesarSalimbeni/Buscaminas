@@ -17,6 +17,7 @@ class PantallaMenu extends StatefulWidget {
 
 class _PantallaMenuState extends State<PantallaMenu> {
   Dificultad _activeDifficulty = Dificultad.facil;
+  String _activeNmros = 'Clásico';
 
   @override
   Widget build(BuildContext context) {
@@ -42,36 +43,38 @@ class _PantallaMenuState extends State<PantallaMenu> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _menuButton(context, 'Jugar', () {
-                  Widget targetPage;
-                  switch (_activeDifficulty) {
-                    case Dificultad.facil:
-                      targetPage = const PantallaPartidaEz();
-                      break;
-                    case Dificultad.medio:
-                      targetPage = const PantallaPartidaMed(); // Matches your partidamed.dart file
-                      break;
-                    case Dificultad.dificil:
-                      targetPage = const PantallaPartidaDif(); // Matches your partidadif.dart file
-                      break;
-                  }
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => targetPage),
+                  context,
+                  MaterialPageRoute(
+                  builder: (context) {
+        // We move the instantiation directly INSIDE the builder function!
+        // This forces Flutter to read the absolute freshest value of _activeNmros every single time the button is pressed.
+                  switch (_activeDifficulty) {
+                  case Dificultad.facil:
+                    return PantallaPartidaEz(estiloNumeros: _activeNmros);
+                  case Dificultad.medio:
+                    return PantallaPartidaMed(estiloNumeros: _activeNmros); 
+                  case Dificultad.dificil:
+                    return PantallaPartidaMed(estiloNumeros: _activeNmros);
+                  }
+                  },
+                  ),
                   );
                 }, fontSize),
                 _menuButton(context, 'High Scores', () {}, fontSize),
                 
                 // CONFIGURACIÓN BUTTON (STATE INTERCHANGE ACTION)
                 _menuButton(context, 'Configuración', () async {
-                  final result = await Navigator.push<Dificultad>(
+                  final result = await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => PantallaConfig(initialDifficulty: _activeDifficulty),
                     ),
                   );
-                  if (result != null) {
+                  if (result != null && result is Map) {
                     setState(() {
-                      _activeDifficulty = result;
+                      _activeDifficulty = result['dificultad'];
+                      _activeNmros = result['numeros'];
                     });
                   }
                 }, fontSize),
