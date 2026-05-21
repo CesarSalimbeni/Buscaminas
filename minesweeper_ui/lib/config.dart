@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:minesweeper_ui/gestionDatos.dart';
-import 'package:minesweeper_ui/numeros.dart';
+import 'package:minesweeper_ui/main.dart';
 import 'estilo.dart';
 
 enum Dificultad { facil, medio, dificil }
@@ -109,42 +109,25 @@ class _PantallaConfigState extends State<PantallaConfig> {
                     SizedBox(height: sectionSpacing),
 
                     _buildSectionTitle('NÚMEROS', sectionFontSize),
-                    const SizedBox(height: 12),
-                    TextButton(
-                      onPressed: () async {
-                        final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => PantallaNumeros()));
-                        if (result is String) {
-                          setState(() {
-                            _selectedNmros = result;
-                          });
-                        }
-                      },
-                      style: ButtonStyle(
-                        foregroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                          if (states.contains(MaterialState.hovered)) {
-                            return ColorsPalette.hoverText;
-                          }
-                          return ColorsPalette.normalText;
-                        }),
-                      ),
-                      child: Text('Cambiar estilo de números', style: TextStyle(fontSize: buttonFontSize + 2)),
-                    ),
-                    const SizedBox(height: 12),
+                      const SizedBox(height: 12), 
+
                     _buildSegmentedButton<String>(
                       context: context,
                       selected: {_selectedNmros},
                       segments: [
-                        ButtonSegment(value: 'Clásico', label: Text('Clásico', style: TextStyle(fontSize: labelFontSize))),
-                        ButtonSegment(value: 'Colorido', label: Text('Colorido', style: TextStyle(fontSize: labelFontSize))),
-                        ButtonSegment(value: 'Minimalista', label: Text('Minimalista', style: TextStyle(fontSize: labelFontSize))),
-                        ButtonSegment(value: 'Retro', label: Text('Retro', style: TextStyle(fontSize: labelFontSize))),
+                      ButtonSegment(value: 'Clásico', 
+                      label: Text('Clásico', style: TextStyle(fontSize: labelFontSize))),
+                      ButtonSegment(value: 'Colorido', 
+                      label: Text('Colorido', style: TextStyle(fontSize: labelFontSize))),
+                      ButtonSegment(value: 'Minimalista', 
+                      label: Text('Minimalista', style: TextStyle(fontSize: labelFontSize))),
+                      ButtonSegment(value: 'Retro', 
+                      label: Text('Retro', style: TextStyle(fontSize: labelFontSize))),
                       ],
                       onSelectionChanged: (selection) {
-                        setState(() {
-                          _selectedNmros = selection.first;
-                        });
-                      },
-                    ),
+                      setState(() {
+                      _selectedNmros = selection.first;
+                      });},),
                     SizedBox(height: sectionSpacing),
 
                     _buildSectionTitle('EFECTOS', sectionFontSize),
@@ -163,17 +146,27 @@ class _PantallaConfigState extends State<PantallaConfig> {
                     _buildSectionTitle('TEMA', sectionFontSize),
                     const SizedBox(height: 12),
                     _buildSegmentedButton<Tema>(
-                      context: context,
-                      selected: {_selectedTema},
-                      segments: [
-                        ButtonSegment(value: Tema.claro, label: Text('Claro', style: TextStyle(fontSize: labelFontSize))),
-                        ButtonSegment(value: Tema.oscuro, label: Text('Oscuro', style: TextStyle(fontSize: labelFontSize))),
-                        ButtonSegment(value: Tema.automatico, label: Text('Automático', style: TextStyle(fontSize: labelFontSize))),
-                      ],
-                      onSelectionChanged: (selection) {
-                        setState(() => _selectedTema = selection.first);
-                      },
-                    ),
+                    context: context,
+                    selected: {_selectedTema},
+                    segments: [
+                      ButtonSegment(value: Tema.claro, 
+                      label: Text('Claro', style: TextStyle(fontSize: labelFontSize))),
+                      ButtonSegment(value: Tema.oscuro, 
+                      label: Text('Oscuro', style: TextStyle(fontSize: labelFontSize))),
+                      ButtonSegment(value: Tema.automatico, 
+                      label: Text('Automático', style: TextStyle(fontSize: labelFontSize))),
+                    ],
+                    onSelectionChanged: (selection) {
+                      setState(() => _selectedTema = selection.first);
+                      if (_selectedTema == Tema.claro) {
+                        themeNotifier.value = ThemeMode.light;
+                      } else if (_selectedTema == Tema.oscuro) {
+                        themeNotifier.value = ThemeMode.dark;
+                      } else {
+                        themeNotifier.value = ThemeMode.system; // Automático
+                      }
+                    },
+                  ),
                     SizedBox(height: sectionSpacing),
                   ],
                 ),

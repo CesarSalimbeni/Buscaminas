@@ -19,7 +19,9 @@ class PantallaPerdida extends StatelessWidget {
               Text("¡HAS PERDIDO!",
                 style: TextStyle(color: ColorsPalette.normalText, fontSize: 100),
               ),
-              TextButton(onPressed: () {},
+              TextButton(onPressed: () {
+                Navigator.pop(context);
+              },
                 style: ButtonStyle(foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                 if (states.contains(WidgetState.hovered)) {
                   return ColorsPalette.hoverText;

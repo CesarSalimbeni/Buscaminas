@@ -111,4 +111,3 @@ class GestionDatos {
 		await prefs.remove(_configKey);
 	}
 }
-

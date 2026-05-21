@@ -3,6 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:minesweeper_ui/config.dart';
 import 'package:minesweeper_ui/gestionDatos.dart';
+import 'package:minesweeper_ui/highscores_dif.dart';
+import 'package:minesweeper_ui/highscores_ez.dart';
+import 'package:minesweeper_ui/highscores_mid.dart';
 import 'package:minesweeper_ui/partidaez.dart';
 import 'package:minesweeper_ui/partidamed.dart';
 import 'package:minesweeper_ui/partidadif.dart';
@@ -83,7 +86,24 @@ class _PantallaMenuState extends State<PantallaMenu> {
                   ),
                   );
                 }, fontSize),
-                _menuButton(context, 'High Scores', () {}, fontSize),
+                _menuButton(context, 'High Scores', () async {
+                  final recordsFacil = await GestionDatos.obtenerRecords('facil');
+                  final recordsMedio = await GestionDatos.obtenerRecords('medio');
+                  final recordsDificil = await GestionDatos.obtenerRecords('dificil');
+                  final lenFacil = recordsFacil.length;
+                  final lenMedio = recordsMedio.length;
+                  final lenDificil = recordsDificil.length;
+                  if (!context.mounted) return;
+                  if (lenFacil == 0 && lenMedio == 0 && lenDificil == 0) {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const PantallaHsMid()));    
+                  } else if (lenFacil >= lenMedio && lenFacil >= lenDificil) {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const PantallaHsEz())); 
+                  } else if (lenMedio >= lenFacil && lenMedio >= lenDificil) {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const PantallaHsMid()));
+                  } else {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const PantallaHsDif()));
+                  }
+                  }, fontSize),
                 
                 // CONFIGURACIÓN BUTTON (STATE INTERCHANGE ACTION)
                 _menuButton(context, 'Configuración', () async {
