@@ -73,14 +73,14 @@ class GestionDatos {
 	/// Guarda la configuración del juego y las preferencias de estilo.
 	static Future<void> guardarConfiguracion({
 		required String dificultad,
-		required bool temaClaro,
+		required String tema,
 		required String estiloNumeros,
 		required bool animacionesActivas,
 	}) async {
 		final prefs = await SharedPreferences.getInstance();
 		final map = {
 			'dificultad': dificultad,
-			'temaClaro': temaClaro,
+			'tema': tema,
 			'estiloNumeros': estiloNumeros,
 			'animacionesActivas': animacionesActivas,
 		};
@@ -96,7 +96,7 @@ class GestionDatos {
 			final Map<String, dynamic> decoded = json.decode(s) as Map<String, dynamic>;
 			return {
 				'dificultad': decoded['dificultad'] as String,
-				'temaClaro': decoded['temaClaro'] as bool,
+				'tema': decoded['tema'] as String,
 				'estiloNumeros': decoded['estiloNumeros'] as String,
 				'animacionesActivas': decoded['animacionesActivas'] as bool,
 			};

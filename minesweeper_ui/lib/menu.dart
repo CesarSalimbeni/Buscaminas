@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:minesweeper_ui/config.dart';
+import 'package:minesweeper_ui/gestionDatos.dart';
 import 'package:minesweeper_ui/partidaez.dart';
 import 'package:minesweeper_ui/partidamed.dart';
 import 'package:minesweeper_ui/partidadif.dart';
@@ -18,6 +19,27 @@ class PantallaMenu extends StatefulWidget {
 class _PantallaMenuState extends State<PantallaMenu> {
   Dificultad _activeDifficulty = Dificultad.facil;
   String _activeNmros = 'Clásico';
+
+  @override
+  void initState() {
+    super.initState();
+    _cargarConfiguracion();
+  }
+
+  Future<void> _cargarConfiguracion() async {
+    final config = await GestionDatos.obtenerConfiguracion();
+    if (config == null) return;
+    setState(() {
+      final dificultad = config['dificultad'] as String;
+      _activeDifficulty = switch (dificultad) {
+        'facil' => Dificultad.facil,
+        'medio' => Dificultad.medio,
+        'dificil' => Dificultad.dificil,
+        _ => _activeDifficulty,
+      };
+      _activeNmros = config['estiloNumeros'] as String;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

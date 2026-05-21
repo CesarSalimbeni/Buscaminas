@@ -1,11 +1,25 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:minesweeper_ui/gestionDatos.dart';
 import 'package:minesweeper_ui/menu.dart';
 import 'estilo.dart';
 
-class PantallaInicio extends StatelessWidget {
+class PantallaInicio extends StatefulWidget {
   const PantallaInicio({super.key});
+
+  @override
+  State<PantallaInicio> createState() => _PantallaInicioState();
+}
+
+class _PantallaInicioState extends State<PantallaInicio> {
+  late Future<Map<String, dynamic>?> _configFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _configFuture = GestionDatos.obtenerConfiguracion();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +58,42 @@ class PantallaInicio extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
+                    FutureBuilder<Map<String, dynamic>?>(
+                      future: _configFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (snapshot.hasError) {
+                          return Text(
+                            'No se pudo cargar la configuración',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: ColorsPalette.normalText, fontSize: buttonFontSize * 0.9),
+                          );
+                        }
+                        final config = snapshot.data;
+                        if (config == null) {
+                          return Text(
+                            'Aún no hay configuración guardada.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: ColorsPalette.normalText, fontSize: buttonFontSize * 0.9),
+                          );
+                        }
+                        return Column(
+                          children: [
+                            _buildConfigSummary('Dificultad', _formatDifficulty(config['dificultad'] as String)),
+                            const SizedBox(height: 8),
+                            _buildConfigSummary('Tema', config['tema'] as String),
+                            const SizedBox(height: 8),
+                            _buildConfigSummary('Números', config['estiloNumeros'] as String),
+                          ],
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 20),
                     TextButton(
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => const PantallaMenu()));
@@ -76,5 +126,22 @@ class PantallaInicio extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildConfigSummary(String label, String value) {
+    return Text(
+      '$label: $value',
+      textAlign: TextAlign.center,
+      style: TextStyle(color: ColorsPalette.normalText, fontSize: 18.0),
+    );
+  }
+
+  String _formatDifficulty(String dificultad) {
+    return switch (dificultad) {
+      'facil' => 'Fácil',
+      'medio' => 'Medio',
+      'dificil' => 'Difícil',
+      _ => dificultad,
+    };
   }
 }
