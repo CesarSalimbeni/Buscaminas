@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:minesweeper_ui/buscaminas.dart';
 import 'package:minesweeper_ui/estilo.dart';
 import 'package:minesweeper_ui/gestionDatos.dart';
+import 'package:minesweeper_ui/perdida.dart';
+import 'package:minesweeper_ui/victoria.dart';
 
 class PantallaPartidaMed extends StatefulWidget {
   final String estiloNumeros;
@@ -70,11 +72,33 @@ class _PantallaPartidaMedState extends State<PantallaPartidaMed>{
 
     if (_juego.juegoTerminado) {
       _detenerCronometro();
+      
       if (_juego.gano) {
         await _guardarRecord('medio');
-        _mostrarResultado('¡Ganaste!', 'Tiempo: ${_formatearTiempo()}');
+        
+        if (!mounted) return; 
+        
+        // Dynamic screen transition on win
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const PantallaVictoria(), 
+          ),
+        );
       } else {
-        _mostrarResultado('¡Perdiste!', 'Intentá de nuevo.');
+        // Pauses the logic for 2 seconds so the player can see the exploded board
+        await Future.delayed(const Duration(seconds: 2));
+
+        // Safety check after delay
+        if (!mounted) return;
+        
+        // Dynamic screen transition on lose
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const PantallaPerdida(),
+          ),
+        );
       }
     }
   }
@@ -161,28 +185,56 @@ class _PantallaPartidaMedState extends State<PantallaPartidaMed>{
     );
   }
 
-    Widget _vistaCelda(CeldaBuscaminas celda){
-      if (celda.estaDescubierta){
-        if (celda.mina){
-          return Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
-              image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)), 
-              child: Padding(padding: EdgeInsets.all(0), child: Image.asset('assets/images/mina.png'))
-          );
-        } else{
-          return Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
-              image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)), 
-              child: Center(child: Text('${celda.adyacentes}', 
-              style: EstilosBuscaminas.numero(celda.adyacentes, widget.estiloNumeros)))
-          );
-        }
-      } else {
-        return Container(margin: EdgeInsets.all(2), decoration: const BoxDecoration(image: DecorationImage(
-              image: AssetImage('assets/images/bloque.jpg'), fit: BoxFit.cover)),
-              child: celda.estaMarcada
-              ? Padding(padding: EdgeInsets.all(0), child: Image.asset('assets/images/bandera.png'))
-              :
-              null
-          );
-      }
+  Widget _vistaCelda(CeldaBuscaminas celda) {
+    bool mostrarMina = (celda.estaDescubierta && celda.mina) || 
+                       (_juego.juegoTerminado && !_juego.gano && celda.mina);
+
+    if (mostrarMina) {
+      return Container(
+        margin: const EdgeInsets.all(2), 
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/bloque.jpg'), 
+            fit: BoxFit.cover
+          )
+        ), 
+        child: Padding(
+          padding: const EdgeInsets.all(0), 
+          child: Image.asset('assets/images/mina.png')
+        )
+      );
+    } else if (celda.estaDescubierta) {
+      return Container(
+        margin: const EdgeInsets.all(2), 
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/bloque.jpg'), 
+            fit: BoxFit.cover
+          )
+        ), 
+        child: Center(
+          child: Text(
+            '${celda.adyacentes}', 
+            style: EstilosBuscaminas.numero(celda.adyacentes, widget.estiloNumeros)
+          )
+        )
+      );
+    } else {
+      return Container(
+        margin: const EdgeInsets.all(2), 
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/bloque.jpg'), 
+            fit: BoxFit.cover
+          )
+        ),
+        child: celda.estaMarcada
+            ? Padding(
+                padding: const EdgeInsets.all(0), 
+                child: Image.asset('assets/images/bandera.png')
+              )
+            : null
+      );
     }
+  }
 }
